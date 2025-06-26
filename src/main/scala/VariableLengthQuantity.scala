@@ -1,7 +1,7 @@
 object VariableLengthQuantity:
 
    def encode(ns: List[Int]): List[Int] =
-      def doStuff(n: Int): List[Int] =
+      def f(n: Int): List[Int] =
          n.toBinaryString.reverse
             .grouped(7)
             .toList
@@ -14,6 +14,17 @@ object VariableLengthQuantity:
             .map(Integer.parseInt(_, 2))
             .reverse
 
-      ns.flatMap(doStuff)
+      ns.flatMap(f)
 
-   def decode(numbers: List[Int]): Either[Exception, List[Int]] = ???
+   def decode(ns: List[Int]): Either[Exception, List[Int]] =
+      def f(ns: List[Int]): Either[Exception, List[Int]] =
+         Right {
+            Integer.parseInt(ns.map(_.toBinaryString.grouped(8).mkString).map(s => "0" * (8 - s.length) + s).map(_.drop(1)).mkString,2) :: Nil
+         }
+
+
+      val b = ns.map(_.toBinaryString.grouped(8).toList)
+      (b.length, b.head) match
+         case (1, ::(head, _)) if head.length > 7 && head(0) == '1' => Left(new Exception())
+         case (1, ::(head, tail)) if head.length < 8                => Right((head :: tail).map(Integer.parseInt(_, 2)))
+         case _                                                     => f(ns)
