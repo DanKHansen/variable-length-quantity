@@ -19,7 +19,7 @@ object VariableLengthQuantity:
    def decode(ns: List[Int]): Either[Exception, List[Int]] =
       def f(ns: List[Int]): Either[Exception, List[Int]] =
          Right {
-            Integer.parseInt(ns.map(_.toBinaryString.grouped(8).mkString).map(s => "0" * (8 - s.length) + s).map(_.drop(1)).mkString,2) :: Nil
+            Integer.parseUnsignedInt(ns.map(_.toBinaryString.grouped(8).mkString).map(s => "0" * (8 - s.length) + s).map(_.drop(1)).mkString,2) :: Nil
          }
 
 
