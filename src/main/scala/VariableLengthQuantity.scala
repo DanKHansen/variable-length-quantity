@@ -2,17 +2,18 @@ import scala.annotation.tailrec
 object VariableLengthQuantity:
 
    def encode(ns: List[Int]): List[Int] =
-      ns.flatMap(n => n.toBinaryString.reverse
-         .grouped(7)
-         .toList
-         .reverse
-         .map(_.reverse)
-         .map(s => "0" * (7 - s.length) + s)
-         .reverse
-         .zipWithIndex
-         .map { case (s, idx) => if idx == 0 then "0" + s else "1" + s }
-         .map(Integer.parseUnsignedInt(_, 2))
-         .reverse)
+      ns.flatMap(n =>
+         n.toBinaryString.reverse
+            .grouped(7)
+            .toList
+            .reverse
+            .map(_.reverse)
+            .map(s => "0" * (7 - s.length) + s)
+            .reverse
+            .zipWithIndex
+            .map { case (s, idx) => if idx == 0 then "0" + s else "1" + s }
+            .map(Integer.parseUnsignedInt(_, 2))
+            .reverse)
 
    def decode(ns: List[Int]): Either[Exception, List[Int]] =
       def f(ns: List[Int]): List[Int] =
